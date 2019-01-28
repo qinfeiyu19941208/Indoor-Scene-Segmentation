@@ -8,19 +8,26 @@ Whilst semantic segmentation as a fundamental part for understanding these raw d
 %
 In the field of semantic segmentation, indoor scene parsing is a challenging problem due to cluttered backgrounds, a wide rang of scenes, object occlusions and various illumination.
 
+\begin{figure}[htpb]
+	\centering
+	\includegraphics[scale=0.65]{figure/Consist.png}
+	\caption{An illustration of “jumpping” problem. The  prediction results by deffierent methods of adjacent frames are shown and some details are framed.}
+	\label{fig:Consist}
+\end{figure}
+
 
 In recent years, a great deal of studies have been conducted can be divided into three groups.
 %
 One group conducted semantic segmentation from single RGB image.
 %
-Another one attempted to add auxiliary information from depth for better segmentation.
+Another one attempted to add auxiliary information from depth for better segmentation results.
 %
 The last one is multi-task learning which learns semantic segmentation with other tasks at the same time.
 
 
 {\bf Semantic Segmentation from Single Image.}
 %
-Fully convolutional networks (FCN) is a milstone-like work for pixel-wise segmentation that converted the existing CNN constructed for classification to semantic segmentation.
+Fully convolutional network (FCN) ~\cite{Long2015} is a milstone-like work for pixel-wise segmentation that converted the existing CNN constructed for classification to semantic segmentation.
 %
 To overcome the limitations of FCN that the network limited by a pre-defined fixed-size receptive field and always lost the detailed structures of objects, Noh \emph{et al.} \cite{Noh2015} proposed a novel deconvolution algorithm. 
 %
@@ -31,6 +38,13 @@ patch-patch contextual information, Lin \emph{et al.} \cite{Lin2016} formulated 
 %
 For generating fine prediction, Lin \emph{et al.} \cite{Lin2017} proposed a multi-path refinement network that effectively exploits multi-level features to refine the prediction step by step.
 
+\begin{figure*}[htbp]
+	\vspace{-0.6cm}
+	\centering
+	\includegraphics[scale=0.6]{figure/Pipeline.png}
+	\caption{The overall architecture of our video-based semantic segmentation network. It mainly consists of three parts: 1) a basic segmentation network, which generates prediction of current frame. The network architecture is shown in right side. 2) intermediate optical flow warpped part. We warp the previous prediction depend on optical flow 3) supervision module. Two supervisory items constitute our supervision module.}
+	\label{fig:Pipeline}
+\end{figure*}
 
 {\bf Semantic Segmentation with Depth.}
 %
@@ -59,13 +73,6 @@ Jiao \emph{et al.} \cite{Jiao2018} presented an attention-driven loss for networ
 %
 By combining two tasks as well as proposed attention-driven loss, the performance of depth estimation and semantic segmentation are mutuallty improved.
 
-\begin{figure*}[htbp]
-	\centering
-	\includegraphics[scale=0.6]{figure/Pipeline.png}
-	\caption{The overall architecture of our video-based semantic segmentation network. It mainly consists of three parts: 1) a basic segmentation model, which generates prediction of current frame 2) intermediate optical flow warpped part. We warp the previous prediction depend on optical flow 3) supervision module. Two supervisory items constitute our supervision module.}
-	\label{fig:Pipeline}
-\end{figure*}
-
 Though above approaches provide a lot of novel ideas to improve the accuracy, the nature of data itself is ignored. 
 %
 Most of them do experiments on dense-annotated data sets, but there are many non-annotated images that have not been used.
@@ -82,7 +89,7 @@ The other is proposing a video-based semantic segmentation network with a tempor
 %
 Due to most approaches being trained on image data set, jumping predictions often occur even in continuous frames of a video. 
 %
-As shown in Figure *.
+As shown in Fig.~\ref{fig:Consist}.
 %
 It means that the network can not handle the problem of small perspective transformation well.
 %
