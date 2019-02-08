@@ -1,21 +1,21 @@
 \begin{abstract}
-Indoor semantic segmentation is a fundamental task in scene understanding.
+Semantic segmentation is a fundamental task in indoor scene understanding.
 %
-Most previous approaches focus on improving performance on dense-annotated datasets. 
+Most previous supervised approaches focus on improving performance based on densely annotated image datasets. 
 %
-However, due to the limited amount of dense-labeled data, the performance of existing networks is greatly limited.
+However, due to the limited amount of densely labeled images, the performance of existing segmentation networks is greatly limited.
 %
-But, there are often a large number of unlabeled data has not been used.
+In this paper, we exploit the temporal correlation in video frames to improve the performance of segmentation networks. 
+%there are often a large number of unlabeled data has not been used.
+Two effective strategies are proposed to propagate the information from sparsely labeled frames to adjacent video frames. 
+First, we augment training data for a supervised semantic segmentation network by generating pseudo ground-truth for neighboring frames from an labeled frame using filtered homography transformation. 
+%Hence, in this paper, we proposed two simple but effective methods to make better use of unlabeled data and improve segmentation results by using temporal correlation between unlabeled data.
 %
-Hence, in this paper, we proposed two simple but effective methods to make better use of unlabeled data and improve segmentation results by using temporal correlation between unlabeled data.
+Second, we introduce a loss function to ensure temporal consistency between the segmentation results of adjacent frames. 
 %
-The first is propogating provided annotations to their neighboring frames. 
-%
-Second, training a semantic segmentation network using the interframe optiacal flow to constrain the temporal consistency.
-%
-Experiments on the indoor dataset show that the proposed methods achieve the state-of-the-art performance in some indicators.
+Experiment results on NYU-V2 dataset show that our proposed method outperforms state-of-the-art techniques for semantic segmentation.
 
 \end{abstract}
 \begin{keywords}
-	Indoor Scene Understanding, Pseudo Ground Truth, Temporal Consitency
+	Indoor scene, semantic segmentation, temporal consistency, pseudo labels 
 \end{keywords}

@@ -1,47 +1,44 @@
 \section{Introduction}
 \label{sec:intro}
-Nowadays, advent of consumer friendly and affordable depth-cameras such as Kinect are commercially employed in many applications such as robotics and virtual reality.
+%Nowadays, advent of consumer friendly and affordable depth-cameras such as Kinect are commercially employed in many applications such as robotics and virtual reality.
+%Understanding and interpreting raw data provided by depth-cameras has drawn many attentions of researchers.
 %
-Understanding and interpreting raw data provided by depth-cameras has drawn many attentions of researchers.
-%
-Whilst semantic segmentation as a fundamental part for understanding these raw data develops rapidly.
-%
-In the field of semantic segmentation, indoor scene parsing is a challenging problem due to cluttered backgrounds, a wide rang of scenes, object occlusions and various illumination.
 
-\begin{figure}[htbp]
+\comments{
+\begin{figure}[t]
 	\includegraphics[scale=0.65]{figure/Consist.png}
 	\vspace*{-0.6cm} 
-	\caption{An illustration of “jumping” problem. The  prediction results by deffierent methods of adjacent frames are shown and some details are framed.}
+	\caption{An illustration of jumping problem in video semantic segmentation. The predicted results of adjacent frames by different methods are shown. Our method generates more temporally consistent results, especially in the highlighted regions.}
 	\label{fig:Consist}
 	\vspace*{-0.35cm}
 \end{figure}
+}
+
+Semantic segmentation is a fundamental part of scene understanding.
+%
+For indoor scenes, the cluttered backgrounds, large variety of scenes, object occlusions and various illumination pose a series of challenges for accurate semantic segmentation.
+%
+In recent years, a great deal of studies have been conducted for indoor scene semantic segmentation, and they can be mainly divided into three groups: semantic segmentation of a single RGB image, semantic segmentation of RGBD images, and multi-task learning methods.
 
 
-In recent years, a great deal of studies have been conducted can be divided into three groups.
+\noindent \textbf{Semantic Segmentation of a Single Image.}
 %
-One group conducted semantic segmentation from single RGB image.
+Fully convolutional network (FCN)~\cite{Long2015} is a pioneering work for pixel-wise segmentation. It first converts existing convolutional neural networks (CNN) constructed for classification for semantic segmentation.
 %
-Another one attempted to add auxiliary information from depth for better segmentation results.
+To overcome the limitations of FCN that the network limited by a fixed-size receptive field, Noh \emph{et al.} \cite{Noh2015} proposed a novel deconvolution algorithm to segment finer object structures.
 %
-The last one is multi-task learning which learns semantic segmentation with other tasks at the same time.
+Bayesian SegNet~\cite{Kendall2015} performs visual scene understanding with a measure of model uncertainty to produce a probabilistic segmentation result.
+%
+To capture semantic correlations between neighboring patches and exploit patch-patch contextual information, Lin \emph{et al.}~\cite{Lin2016} formulated conditional random fields (CRFs) with CNN-based pairwise potential function. 
+%
+For generating fine prediction, a multi-path refinement network is proposed to effectively exploit multi-level features and refines the prediction step by step~\cite{Lin2017}.
+%
 
-
-{\bf Semantic Segmentation from Single Image.}
-%
-Fully convolutional network (FCN) ~\cite{Long2015} is a milstone-like work for pixel-wise segmentation that converted the existing CNN constructed for classification to semantic segmentation.
-%
-To overcome the limitations of FCN that the network limited by a pre-defined fixed-size receptive field and always lost the detailed structures of objects, Noh \emph{et al.} \cite{Noh2015} proposed a novel deconvolution algorithm. 
-%
-Bayesian SegNet \cite{Kendall2015} performed visual scene understanding with a measure of model uncertainty to produce a probabilistic segmentation result.
-%
-To capture semantic correlations between neighboring patches and expoit the
-patch-patch contextual information, Lin \emph{et al.} \cite{Lin2016} formulated conditional random fields (CRFs) with CNN-based pairwise potential function. 
-%
-For generating fine prediction, Lin \emph{et al.} \cite{Lin2017} proposed a multi-path refinement network that effectively exploits multi-level features to refine the prediction step by step.
-%
+\comments{
 Semantic segmentation from a single image often leads to incomplete segmentation results. 
 %
 As the predictions from RefineNet \cite{Lin2017} shown in Fig.~\ref{fig:Consist}.
+}
 
 \begin{figure*}[htbp]
 	\vspace{-0.6cm}
@@ -55,14 +52,17 @@ As the predictions from RefineNet \cite{Lin2017} shown in Fig.~\ref{fig:Consist}
 	\label{fig:Pipeline}
 	\vspace*{-0.2cm}
 \end{figure*}
+ 
 
-{\bf Semantic Segmentation with Depth.}
+\noindent \textbf{Semantic Segmentation of RGB-Depth Images.}
 %
-Using extracted features from RGB images and depth data, Gupta \emph{et al.} \cite{Gupta2014} implemented an integrated system for scene understanding.
+With the popularity of affordable depth-cameras, many techniques have been proposed for semantic segmentation of RGBD images.
 %
- A novel long short-term memorized context fusion (LSTM-CF) model is propposed by Li \emph{et al.} \cite{Li2016} to fuse contextual information from multiple sources such as RGB images and depth data.
+Gupta \emph{et al.} \cite{Gupta2014} extract features from RGB and depth data and integrate them for object detection and segmentation.
+%
+A novel long short-term memorized context fusion (LSTM-CF) model is proposed \cite{Li2016} to fuse contextual information from multiple sources such as RGB images and depth data.
 % 
-Cheng \emph{et al.} \cite{Cheng2017} rethought the relationship between RGB images and depth, and proposed a locality-sensitive deconvolution network to refine the boundary of segmentation result as well as a gated fusion layer to combine features of two modes.
+Cheng \emph{et al.} \cite{Cheng2017} rethink the relationship between RGB images and depth, and propose a locality-sensitive deconvolution network to refine object boundaries of segmentation result as well as a gated fusion layer to combine features of two modes.
 %
 Park \emph{et al.} \cite{Park2017} worked on how to fuse the multi-level RGB-D CNN features.
 %
@@ -71,6 +71,8 @@ Therefore, they proposed a multi-modal feature fusion blocks and added it to Ref
 Although adding depth information improves the performance of single image segmentation, the predictions between consecutive frames are jumped due to the temporal relationship is not taken into account.
 %
 Fig.~\ref{fig:Consist} shows the "jumping" problem.
+
+\textbf{we do not solve the jumping problem.}
 
 {\bf Multi-task Learning.} 
 %
