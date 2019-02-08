@@ -1,8 +1,6 @@
 \section{Methodology}
 \label{sec:metho}
-In this section, we describle the generation of PGT and proposed video-based semantic segmentation network.
-%
-We first introduce generation steps of PGT, and then present the overview of video-based semantic segmentation network.
+In this section, we first describle the generation of PGT, and then present the overview of training segmentation network using temporal consistency.
 
 {\bf Pseudo Ground Truth Generation.}
 %
@@ -31,7 +29,7 @@ h_{20} & h_{21} & h_{22}\\
 
 Second, filtering label manually once and deleting labels with excessive noise.
 %
-Comparing with dense image annotation, filttering PGT took about half a day (2-3sec/image) for a human.
+Comparing with dense image annotation, filttering PGT just took about half a day (2-3sec/image) for a human.
 %
 We believe that performance boost received at the cost of a small amount of manpower is valuable.
 %
@@ -40,17 +38,17 @@ To this end, the total number of PGT frames obtained is 7626.
 Although PGT includes noise samples, the diversity of training set are also enriched. 
 
 
-{\bf Video-based Semantic Segmentation Network.}
+{\bf Training Segmentation Network using Temporal Consistency.}
 %
-Fig.~\ref{fig:Pipeline} illustrates the overall architecture of our proposed video-based semantic segmentation network, which mainly consist of three parts: the basic segmentation network, the warp operation between frames, and the supervision module.
+Fig.~\ref{fig:Pipeline} illustrates the overall of our proposed trainning policy, which mainly consist of three steps.
 %
 First, the current frame is passed through the basic segmentation network to generate prediction.
 %
-Meanwhile, the warp operation is used to warp the previous frame prediction to align with current frame by optical flow.
+Second, the warp operation is used to warp the previous frame prediction to align with current frame by optical flow.
 %
-And then, the warped previous frame prediction plays a role of a supervisory item of supervision module to constrain the consistency of prediction results of neighboring image frames.
+Finally, the warped previous frame prediction plays a role of a supervisory item of supervision module to constrain the consistency of prediction results of neighboring image frames.
 %
-Finally, the PGT of current frame as the other supervisory item of supervision module is introduced to guarantee that the prediction results are as accurate as possible.
+Meanwhile, the PGT of current frame as the other supervisory item is introduced to guarantee that the prediction results are as accurate as possible.
 
 
 
@@ -60,15 +58,13 @@ To obtain better segmentation result, we use RDFNet\cite{Park2017} that is a hig
 %
 The input of RDFNet is RGBD data. 
 %
-The depthmap is encoded into a 3D image called HHA which encodes height above ground and angle with gravity for each pixel in addition to the horizontal disparity.
+The depthmap is encoded into a 3D image called HHA \cite{Gupta2014} which encodes {\bf H}eight above ground and {\bf H}orizontal disparity in addition to the {\bf A}ngle with gravity for each pixel .
 %
-Four multi-modal feature fusions (MMF) are used to fully exploit multi-level HHA and RGB images features.
+Four multi-model feature fusions (MMF) are used to fully exploit multi-level HHA and RGB images' features.
 %
 And then four RefineNet blocks are applied to refine the output of MMF gradually.
 %
 More details of RDFNet could be found in \cite{Park2017}. 
-%
-And the network structure of RDFNet is reviewed in Fig.~\ref{fig:Pipeline}.
 
 In our warp operation, the optical flow is calculated by PWC-Net \cite{Sun2018} that is a highly efficient and accurate model.
 %
@@ -83,11 +79,20 @@ where ${\hat{S}_{t-1}}$ denotes the warped score map of previous frame, and ${O_
 %
 In our work, we implement ${Warp}$ as a bilinear interpolation of $S_{t-1}$.
 %
-And adding a Argmax layer to extract the warped prediction of previous frame.
+And adding a Argmax layer to extract the warped prediction ${W_{t-1}}$ of previous frame.
 \begin{equation}
 \centering
 W_{t-1}=Argmax(\hat{S}_{t-1})
 \end{equation}
+
+\begin{figure}[htpb]
+	\centering
+	\includegraphics[scale=0.61]{figure/PGT.png}
+	\vspace*{-0.6cm} 
+	\caption{Qualitative results of our PGT. $F_t$ and $F_{t+1}$ are two adjacent frames. The GT of $F_t$ is provided by NYU-v2 dataset. We propogate the annotated label of $F_{t}$ to $F_{t+1}$ and generate the corresponding PGT. The right side shows details of good quality pseudo labels and noisy pseuso labels respectively.}
+	\label{fig:PGT}
+	\vspace*{-0.35cm} 
+\end{figure}
 
 Two supervisory items constitute our supervision module.
 %
@@ -107,22 +112,13 @@ L_{All}= \lambda L_{PGT} +(1-\lambda)L_{Consistency}
 \end{aligned}
 \end{equation}
 
-\begin{figure}[htpb]
-	\centering
-	\includegraphics[scale=0.65]{figure/PGT.png}
-	\caption{Qualitative results of our PGT. (a) is a sequence of images. And the right side shows details of good quality pseudo labels and noisy pseuso labels respectively. }
-	\label{fig:PGT}
-\end{figure}
-
-Here, ${L_{PGT}}$ means the loss comes from first supervision item.
-%
-${L_{Consistency}}$ denotes the loss from second supervision item which constrains the predicted results are consistent in time dimension. 
+Here, ${L_{PGT}}$ and ${L_{Consistency}}$ denote the losses come from two supervision items.
 %
 Both ${L_{PGT}}$ and ${L_{Consistency}}$ are softmax loss, as described below.
 \begin{equation}
-{\setlength\abovedisplayskip{8pt}
-	\setlength\belowdisplayskip{-8pt}
-\centering
+{
+\vspace*{-0.6cm} 
+\centering     
 \begin{aligned}
 L_{PGT} = -&\sum_{i=0}^Il(\vec p_i,\vec y_i) \\
 L_{Consistency} &= -\sum_{i=0}^Il(\vec w_i,\vec y_i)\\
@@ -131,11 +127,11 @@ l(\vec p_i,\vec y_i) = -&\sum_{k=0}^c \,p_{ik}\log{y_{ik}}\;,\; \vec y_{i} = f(x
 }
 \end{equation}
 
-Here ${x_i}$ and ${\vec y_i}$ denote a pixel of input and the corresponding output of semantic segmentation model respectively. 
+Here ${x_i}$ and ${\vec y_i}$ are a pixel of input and the corresponding output of semantic segmentation model respectively. 
 %
 ${c}$ represents number of categories, and ${I}$ is the number of pixels in the RGB image. 
 %
-${\vec p_i}$ and ${\vec w_i}$ are an one-hot vector for each pixel of PGT and warped previous frame prediction respectively. 
+${\vec p_i}$ and ${\vec w_i}$ are an one-hot vector for each pixel of PGT and warped previous frame prediction $W_{t-1}$ respectively. 
 %
 ${l(\cdot)}$ is softmax loss of one pixel, and ${f(\cdot)}$ is our basic segmentation network. 
 %

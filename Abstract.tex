@@ -1,19 +1,21 @@
 \begin{abstract}
 Indoor semantic segmentation is a fundamental task in scene understanding.
 %
-Most previous approaches focus on improving performances on dense annotated datasets. 
+Most previous approaches focus on improving performance on dense-annotated datasets. 
 %
-However, there is a great amount of unlabled data that has not yet been used.
+However, due to the limited amount of dense-labeled data, the performance of existing networks is greatly limited.
 %
-In addition, by studying the prediction results from previous methods, we observe that the "jumping" often occured between adjacent frames.
+But, there are often a large number of unlabeled data has not been used.
 %
-In this paper, we first propose a simple method to make better use of unlabeled data by propogating annotations to their neighbor frames. 
+Hence, in this paper, we proposed two simple but effective methods to make better use of unlabeled data and improve segmentation results by using temporal correlation between unlabeled data.
 %
-Aiming at the "jumping" problem, we propose a video-based semantic segmentation network that using the interframe optiacal flow to constrain that the prediction of adjcent frames are consistent.
+The first is propogating provided annotations to their neighboring frames. 
 %
-Experiments on the indoor dataset show that the proposed method achieves the state-of-the-art performance in some indicators.
+Second, training a semantic segmentation network using the interframe optiacal flow to constrain the temporal consistency.
+%
+Experiments on the indoor dataset show that the proposed methods achieve the state-of-the-art performance in some indicators.
 
 \end{abstract}
 \begin{keywords}
-	Indoor Scene Understanding, Pseudo Ground Truth , Video-based Semantic Segmentation Network
+	Indoor Scene Understanding, Pseudo Ground Truth, Temporal Consitency
 \end{keywords}

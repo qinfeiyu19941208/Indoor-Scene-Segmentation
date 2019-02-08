@@ -8,11 +8,12 @@ Whilst semantic segmentation as a fundamental part for understanding these raw d
 %
 In the field of semantic segmentation, indoor scene parsing is a challenging problem due to cluttered backgrounds, a wide rang of scenes, object occlusions and various illumination.
 
-\begin{figure}[htpb]
-	\centering
+\begin{figure}[htbp]
 	\includegraphics[scale=0.65]{figure/Consist.png}
-	\caption{An illustration of “jumpping” problem. The  prediction results by deffierent methods of adjacent frames are shown and some details are framed.}
+	\vspace*{-0.6cm} 
+	\caption{An illustration of “jumping” problem. The  prediction results by deffierent methods of adjacent frames are shown and some details are framed.}
 	\label{fig:Consist}
+	\vspace*{-0.35cm}
 \end{figure}
 
 
@@ -37,18 +38,27 @@ To capture semantic correlations between neighboring patches and expoit the
 patch-patch contextual information, Lin \emph{et al.} \cite{Lin2016} formulated conditional random fields (CRFs) with CNN-based pairwise potential function. 
 %
 For generating fine prediction, Lin \emph{et al.} \cite{Lin2017} proposed a multi-path refinement network that effectively exploits multi-level features to refine the prediction step by step.
+%
+Semantic segmentation from a single image often leads to incomplete segmentation results. 
+%
+As the predictions from RefineNet \cite{Lin2017} shown in Fig.~\ref{fig:Consist}.
 
 \begin{figure*}[htbp]
 	\vspace{-0.6cm}
+	\setlength{\abovecaptionskip}{0pt} 
+	\setlength{\belowcaptionskip}{10pt}
 	\centering
-	\includegraphics[scale=0.6]{figure/Pipeline.png}
-	\caption{The overall architecture of our video-based semantic segmentation network. It mainly consists of three parts: 1) a basic segmentation network, which generates prediction of current frame. The network architecture is shown in right side. 2) intermediate optical flow warpped part. We warp the previous prediction depend on optical flow 3) supervision module. Two supervisory items constitute our supervision module.}
+	\centering
+	\includegraphics[scale=0.57]{figure/Pipeline.png}
+	\vspace*{-0.8cm} 
+	\caption{The diagram of our proposed methods. The left one is pseudo ground truth propagation. We propagate the GT from labeled frame to their adjacent frames by image warpping. The right one is flow chart of training segmentation network using temporal consistncy. It mainly consists of three steps: 1) The current frame $F_t$ passes through a basic semantic segmentation network to generate the prediction  2) Warpping the prediction of previous frame $F_{t-1}$ depends on optical flow generated from PWC-Net \cite{Sun2018} 3) Warpped prediction of $F_{t-1}$ and generated PGT joint action on the network by $L_{consistency}$ and $L_{PGT}$ respectively.}
 	\label{fig:Pipeline}
+	\vspace*{-0.2cm}
 \end{figure*}
 
 {\bf Semantic Segmentation with Depth.}
 %
-Using extracted features from RGB images and depth images, Gupta \emph{et al.} \cite{Gupta2014} implemented an integrated system for scene understanding.
+Using extracted features from RGB images and depth data, Gupta \emph{et al.} \cite{Gupta2014} implemented an integrated system for scene understanding.
 %
  A novel long short-term memorized context fusion (LSTM-CF) model is propposed by Li \emph{et al.} \cite{Li2016} to fuse contextual information from multiple sources such as RGB images and depth data.
 % 
@@ -57,13 +67,16 @@ Cheng \emph{et al.} \cite{Cheng2017} rethought the relationship between RGB imag
 Park \emph{et al.} \cite{Park2017} worked on how to fuse the multi-level RGB-D CNN features.
 %
 Therefore, they proposed a multi-modal feature fusion blocks and added it to RefineNet \cite{Lin2017}.
-
+%
+Although adding depth information improves the performance of single image segmentation, the predictions between consecutive frames are jumped due to the temporal relationship is not taken into account.
+%
+Fig.~\ref{fig:Consist} shows the "jumping" problem.
 
 {\bf Multi-task Learning.} 
 %
-Eigen and Fergus \cite{Eigen2015} addressed three different tasks such as depth prediction, surface normal estimation, and semantic labeling using a single multiscale convolutional netwrok architecture. 
+Eigen and Fergus \cite{Eigen2015} addressed three different tasks such as depth prediction, surface normal estimation, and semantic labeling using a single multiscale convolutional netwrok. 
 %
-Prediction-and-distillationn network (PAD-Net) is another work\cite{Xu2018} which predicts a set of intermediate tasks including depth, surface normal, semantic and contour estimation, and then using the predictions from these tasks as multi-modal disitillation modules' inputs for final two tasks.  
+Prediction-and-distillationn network (PAD-Net) is another work\cite{Xu2018} which predicts a set of intermediate tasks including depth, surface normal, semantic and contour estimation, and then using the predictions from these tasks as multi-modal disitillation modules' inputs for final tasks.  
 %
 A novel joint Task-Recursive Learning (TRL) \cite{Zhang2018} framework for semantic segmentation and depth estimation was proposed by Zhang. 
 %
@@ -72,28 +85,20 @@ In TRL, two tasks are alternately processed in the decoder to imporve each other
 Jiao \emph{et al.} \cite{Jiao2018} presented an attention-driven loss for network supervision and a synergy network to learn the information sharing strategies. 
 %
 By combining two tasks as well as proposed attention-driven loss, the performance of depth estimation and semantic segmentation are mutuallty improved.
+%
+Although the multi-task learning method improves the segmentation results, it needs supplementary information or even data from other tasks, and the overall process is more complex.
 
-Though above approaches provide a lot of novel ideas to improve the accuracy, the nature of data itself is ignored. 
+Above approaches provide a lot of novel ideas to improve the segmentation results, but the ability and performance of these methods are greatly limited by the limited dense-annotated training data.
 %
-Most of them do experiments on dense-annotated data sets, but there are many non-annotated images that have not been used.
+Meanwhile, dense-annontated data is expensive to obtain.
 %
-It caused a huge waste of data.
-%
-In order to take full use of non-annotated images, in this paper, we propose two simple but effective ways. 
+In order to take full use of a large quantity of non-annotated data, in this paper, we propose two simple but effective approaches. 
 %
 One is propagating labels from annotated frame to neighbouring non-aonnotated frames that generates many good quality and mixed noise pseudo ground truth (PGT) for network training. 
 %
 Compared to common data augmentation operations, it increases the diversity of training data.
 %
-The other is proposing a video-based semantic segmentation network with a temporal consistency constraint between frames. 
-%
-Due to most approaches being trained on image data set, jumping predictions often occur even in continuous frames of a video. 
-%
-As shown in Fig.~\ref{fig:Consist}.
-%
-It means that the network can not handle the problem of small perspective transformation well.
-%
-And the consistency of prediction results in time dimension could not be well maintained.
+The other is proposing a training policy that training a semantic segmentation network with a temporal consistency constraint between frames. 
 %
 The rest of this paper is organized as follows.
 % 
