@@ -40,13 +40,13 @@ Although PGT includes noise samples, the diversity of training set are also enri
 
 {\bf Training Segmentation Network using Temporal Consistency.}
 %
-Fig.~\ref{fig:Pipeline} illustrates the overall of our proposed trainning policy, which mainly consist of three steps.
+Fig.~\ref{fig:Pipeline} illustrates the overall of our proposed trainning policy, which mainly consists of three steps.
 %
 First, the current frame is passed through the basic segmentation network to generate prediction.
 %
 Second, the warp operation is used to warp the previous frame prediction to align with current frame by optical flow.
 %
-Finally, the warped previous frame prediction plays a role of a supervisory item of supervision module to constrain the consistency of prediction results of neighboring image frames.
+Finally, the warped previous frame prediction plays a role of a supervisory item to constrain the consistency of prediction results of neighboring image frames.
 %
 Meanwhile, the PGT of current frame as the other supervisory item is introduced to guarantee that the prediction results are as accurate as possible.
 
@@ -85,24 +85,13 @@ And adding a Argmax layer to extract the warped prediction ${W_{t-1}}$ of previo
 W_{t-1}=Argmax(\hat{S}_{t-1})
 \end{equation}
 
-\begin{figure}[htpb]
-	\centering
-	\includegraphics[scale=0.61]{figure/PGT.png}
-	\vspace*{-0.6cm} 
-	\caption{Qualitative results of our PGT. $F_t$ and $F_{t+1}$ are two adjacent frames. The GT of $F_t$ is provided by NYU-v2 dataset. We propogate the annotated label of $F_{t}$ to $F_{t+1}$ and generate the corresponding PGT. The right side shows details of good quality pseudo labels and noisy pseuso labels respectively.}
-	\label{fig:PGT}
-	\vspace*{-0.35cm} 
-\end{figure}
-
-Two supervisory items constitute our supervision module.
+Two supervisory items act on the Network Together.
 %
 One is to monitor the prediction result of the current frame to be consistent with the PGT.
 %
 The other is for constraining consistency of prediction results between frames by an additional loss function called consistentency loss. 
 %
-To leverage two items of supervision module, we propose a trust parameter ${\lambda}$ for weighing two losses. 
-%
-In addition, the trust parameter ${\lambda}$ is also used to represent what kind of supervisory item the model trust in.
+To leverage two supervisory items, we use a parameter ${\lambda}$ for weighing two losses. 
 %
 Our total loss function is defined as follows.
 \begin{equation}

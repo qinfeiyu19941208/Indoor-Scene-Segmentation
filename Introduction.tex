@@ -41,14 +41,14 @@ As the predictions from RefineNet \cite{Lin2017} shown in Fig.~\ref{fig:Consist}
 }
 
 \begin{figure*}[htbp]
-	\vspace{-0.6cm}
+%	\vspace{-0.6cm}
 	\setlength{\abovecaptionskip}{0pt} 
 	\setlength{\belowcaptionskip}{10pt}
 	\centering
 	\centering
 	\includegraphics[scale=0.57]{figure/Pipeline.png}
-	\vspace*{-0.8cm} 
-	\caption{The diagram of our proposed methods. The left one is pseudo ground truth propagation. We propagate the GT from labeled frame to their adjacent frames by image warpping. The right one is flow chart of training segmentation network using temporal consistncy. It mainly consists of three steps: 1) The current frame $F_t$ passes through a basic semantic segmentation network to generate the prediction  2) Warpping the prediction of previous frame $F_{t-1}$ depends on optical flow generated from PWC-Net \cite{Sun2018} 3) Warpped prediction of $F_{t-1}$ and generated PGT joint action on the network by $L_{consistency}$ and $L_{PGT}$ respectively.}
+%	\vspace*{-0.8cm} 
+	\caption{The diagram of our proposed methods. The left one is pseudo ground truth generation. We propagate the GT from labeled frame to their adjacent frames by image warpping. The right one is flow chart of training segmentation network using temporal consistncy. It mainly consists of three steps: 1) The current frame $F_t$ passes through a basic semantic segmentation network to generate the prediction  2) Warpping the prediction of previous frame $F_{t-1}$ depends on optical flow generated from PWC-Net \cite{Sun2018} 3) Warpped prediction of $F_{t-1}$ and generated PGT joint action on the network by $L_{consistency}$ and $L_{PGT}$ respectively.}
 	\label{fig:Pipeline}
 	\vspace*{-0.2cm}
 \end{figure*}
@@ -64,31 +64,28 @@ A novel long short-term memorized context fusion (LSTM-CF) model is proposed \ci
 % 
 Cheng \emph{et al.} \cite{Cheng2017} rethink the relationship between RGB images and depth, and propose a locality-sensitive deconvolution network to refine object boundaries of segmentation result as well as a gated fusion layer to combine features of two modes.
 %
-Park \emph{et al.} \cite{Park2017} worked on how to fuse the multi-level RGB-D CNN features.
+Park \emph{et al.} \cite{Park2017} work on fusing the multi-level RGB-D CNN features.
 %
-Therefore, they proposed a multi-modal feature fusion blocks and added it to RefineNet \cite{Lin2017}.
-%
-Although adding depth information improves the performance of single image segmentation, the predictions between consecutive frames are jumped due to the temporal relationship is not taken into account.
-%
-Fig.~\ref{fig:Consist} shows the "jumping" problem.
+They propose a multi-modal feature fusion blocks and added it to RefineNet \cite{Lin2017}.
+
 
 \textbf{we do not solve the jumping problem.}
 
 {\bf Multi-task Learning.} 
 %
-Eigen and Fergus \cite{Eigen2015} addressed three different tasks such as depth prediction, surface normal estimation, and semantic labeling using a single multiscale convolutional netwrok. 
+Eigen and Fergus \cite{Eigen2015} address three different tasks such as depth prediction, surface normal estimation, and semantic labeling using a single multiscale convolutional netwrok. 
 %
-Prediction-and-distillationn network (PAD-Net) is another work\cite{Xu2018} which predicts a set of intermediate tasks including depth, surface normal, semantic and contour estimation, and then using the predictions from these tasks as multi-modal disitillation modules' inputs for final tasks.  
+Prediction-and-distillationn network (PAD-Net)\cite{Xu2018} predicts a set of intermediate tasks including depth, surface normal, semantic and contour estimation, and then using the predictions from these tasks as multi-modal disitillation modules' inputs for final tasks.  
 %
-A novel joint Task-Recursive Learning (TRL) \cite{Zhang2018} framework for semantic segmentation and depth estimation was proposed by Zhang. 
+A novel joint Task-Recursive Learning (TRL) \cite{Zhang2018} framework for semantic segmentation and depth estimation was proposed by Zhang \emph{et al}. 
 %
 In TRL, two tasks are alternately processed in the decoder to imporve each other.
 % 
 Jiao \emph{et al.} \cite{Jiao2018} presented an attention-driven loss for network supervision and a synergy network to learn the information sharing strategies. 
 %
-By combining two tasks as well as proposed attention-driven loss, the performance of depth estimation and semantic segmentation are mutuallty improved.
+By combining two tasks as well as proposed attention-driven loss, the performance of two tasks are mutuallty improved.
 %
-Although the multi-task learning method improves the segmentation results, it needs supplementary information or even data from other tasks, and the overall process is more complex.
+Although the multi-task learning methods improve the segmentation results, it needs a lot of supplementary information or even dense-annotated data from other tasks.
 
 Above approaches provide a lot of novel ideas to improve the segmentation results, but the ability and performance of these methods are greatly limited by the limited dense-annotated training data.
 %
@@ -108,4 +105,4 @@ Our methodology will be introduced firstly.
 %
 Then, we will report the extensive experimental results as well as analyses. 
 %
-Finally we will draw a conclusion and propose our future work.
+Finally we will draw a conclusion.

@@ -1,9 +1,19 @@
 \section{EXPERIMENTS AND EVALUATION}
 \label{sec:exper}
+
+\begin{figure}[tpb]
+	\centering
+	\includegraphics[scale=0.61]{figure/PGT.png}
+	%	\vspace*{-0.6cm} 
+	\caption{Qualitative results of our PGT. $F_t$ and $F_{t+1}$ are two adjacent frames. The GT of $F_t$ is provided by NYU-v2 dataset. We propogate the annotated label of $F_{t}$ to $F_{t+1}$ and generate the corresponding PGT. The right side shows details of good quality pseudo labels and noisy pseuso labels respectively.}
+	\label{fig:PGT}
+	%	\vspace*{-0.35cm} 
+\end{figure}
+
 \begin{figure*}[!th]
 	\centering
-	\includegraphics[scale=0.6]{figure/Result.png}
-	\caption{Qualitative results on the NYUD—v2 dataset. For the secne image in each row, we show: the RGB image; the ground truth of semantic segmentation; the result of RefineNet; the result of RDFNet; the result of trained by $L_{Consistency}$; the result of trained by $L_{PGT}$ and the result of trained by two losses. Our method predicts more accurate and complete segmentation results.}
+	\includegraphics[scale=0.65]{figure/Result.png}
+	\caption{Qualitative results on the NYUD—v2 dataset. For the secne image in each row, we show: the RGB image; the ground truth of semantic segmentation; the result of RDFNet; the result of trained by $L_{Consistency}$; the result of trained by $L_{PGT}$ and the result of trained by two losses. Our method predicts more accurate segmentation results.}
 	\label{fig:VisResult}
 \end{figure*}
 To demonstrate the validity of proposed appoaches for indoor scene segmentation, we conduct the experiments on a publicly available benchmark dataset (NYUD-v2) which provides many sequences of RGBD data. 
@@ -31,8 +41,8 @@ Following previous works
 \cite{Eigen2015,Gupta2014,Kendall2015,Lin2016,Lin2017,Li2016,Cheng2017,Park2017,Xu2018,Zhang2018,Jiao2018}, we use several quantitative metrics to evaluate our semantic segmentation results, including pixel 
 accuracy, mean accuracy and mean IOU. 
 %
-\begin{table}[!htbp]
-	\vspace{-0.4cm}
+\begin{table}[tb]
+%	\vspace{-0.4cm}
 	\centering
 	\caption{Comparsions of different network architectures on NYU v2 Dataset.}
 	\begin{tabular*}{8.7cm}{lllll}
