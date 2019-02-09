@@ -45,11 +45,11 @@ All our experiments are conducted on a single Nvidia Titan X Pascal GPU, using t
 Following previous work
 \cite{Eigen2015,Gupta2014,Kendall2015,Lin2016,Lin2017,Li2016,Cheng2017,Park2017,Xu2018,Zhang2018,Jiao2018}, we use three quantitative metrics to evaluate our semantic segmentation results, including pixel accuracy, mean accuracy and mean IOU. 
 %%
-Denote $m_{kj}$ as the number of pixels of class ${k}$ classified as class ${j}$
+Denote $m_{kj}$ as the number of pixels of class ${k}$ classified as class ${j}$.
 %Assuming 
 The number of categories is $c$, and $M_{k} = \sum_{j}m_{kj}$ is the total number of pixels belonging to class $k$. 
 %
-And $N = \sum_{k}m_{k}$ denotes the number of all pixels in the training set.
+And $N = \sum_{k}m_{k}$ denotes the number of all pixels in the test set.
 %
 The three metrics are defined as follows:
 \begin{equation}\label{eq:metric}
@@ -104,13 +104,13 @@ The three metrics are defined as follows:
 
 We set the RDFNet~\cite{Park2017} as our baseline. 
 However, due to hardware difference, using the official code, we get results (Baseline) that is slightly different from that reported in their paper (RDFNet), as shown in Table~\ref{Tab:Results}. 
-We compare different variant of our approach to demonstrate the effectiveness of each component, and the results are reported in Table~\ref{Tab:Results}. 
+We compare different variants of our approach to demonstrate the effectiveness of each component, and the results are reported in Table~\ref{Tab:Results}. 
 
 \para{Analysis of Temporal Consistency.} While training RDFNet with the 795 manually labeled images, and our temporal consistency constraint (+$L_C$ for short), the mean accuracy increases to $63.3\%$ from $63.0\%$, and IoU increases to $50.1\%$ from $50.0\%$.
 
 
 \para{Analysis of Pseudo labels.} 
-Though the pseudo labels still contains a certain amount of noises, most of them are reliable, especially inside an object region. 
+Though the pseudo labels still contain a certain amount of noises, most of them are reliable, especially inside an object region. 
 %
 While training the RDFNet with extra images of pseudo labels, the performance (Ours+PGT) greatly increases, especially at mean accuracy ($63.6\%$), compared with the baseline.
 %
@@ -148,7 +148,7 @@ And our method achieves the comparable performance as multi-task learning method
 }
 
 
-\para{Dicussion.} By involving temporal consistency, we also found that there are conflicts between manual labels of the same scene, as shown in Fig.~\ref{fig:mislabels}. Our method produce much more accurate and consistent results.
+\para{Dicussion.} By involving temporal consistency, we also found that there are conflicts between manual labels of the same scene, as shown in Fig.~\ref{fig:mislabels}. Our method produces much more accurate and consistent results.
 % the ground truth proposed by NYUD-v2 data set exits some annotation errors shown in Fig.~\ref{fig:mislabels}.
 
 

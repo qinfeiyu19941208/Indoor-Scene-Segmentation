@@ -35,7 +35,7 @@ s.t. \hspace{0.4cm}0.95<\max{\left\{h_{00},h_{01},h_{10},h_{11}\right\}}&<1.05,\
 Fig.~\ref{fig:PGT} shows an example of the generated pseudo ground truth labels from a reference frame $F_t$. 
 It can be seen that most of the semantic labels are well propagated and can be used as extra data for network training. 
 % 
-However, there is still some noisy labels in the propagated PGT, especially at the object boundary regions. 
+However, there are still some noisy labels in the propagated PGT, especially at the object boundary regions. 
 %
 Therefore, we add a manual filtering process to remove the frames where there are obvious visual artifacts in the generated pseudo labels.
 %
@@ -45,9 +45,9 @@ Therefore, we add a manual filtering process to remove the frames where there ar
 %\noindent\textbf{Training Segmentation Network using Temporal Consistency.}
 \subsection{Training Segmentation Network using Temporal Consistency}
 %
-As Fig.~\ref{fig:Pipeline} shows, we train a semantic segmentation networks using two adjacent frames in a video instead of using a single labeled frame.  
+As Fig.~\ref{fig:Pipeline} shows, we train a semantic segmentation network using two adjacent frames in a video instead of using a single labeled frame.  
 % 
-First, two adjacent frames $F_{t-1}$ and $F_t$ is passed through a basic segmentation network to predict semantic labels $S_{t-1}$ and $S_{t}$.
+First, two adjacent frames $F_{t-1}$ and $F_t$ are passed through a basic segmentation network to predict semantic labels $S_{t-1}$ and $S_{t}$.
 %
 The basic segmentation network could be any existing network for semantic segmentation. 
 We use RDFNet\cite{Park2017}, which is a high-precision network for semantic segmentation of a RGBD image.
@@ -63,7 +63,7 @@ Second, the predicted semantic score map $S_{t-1}$ for frame $F_{t-1}$ is warped
 We implement a bilinear interpolation for $40$ dimensional score vector of each pixel in $S_{t-1}$, where 40 is the total number of object classes in the dataset. 
 \begin{equation}
 \centering
-\hat{S}_{t}=Warp(S_{t-1},O_{t-1,t}).
+\hat{S}_{t-1}=Warp(S_{t-1},O_{t-1,t}).
 \end{equation}
 %
 An argmax layer is then added on the warped score map ${\hat{S}_{t-1}}$ to generate the warped semantic prediction $W_{t}$.
@@ -106,6 +106,6 @@ ${c}=40$ is number of categories.
 %
 ${\mathbf{p}_i}$ and ${\mathbf{w}_i}$ are an one-hot vector for each pixel of the pseudo ground truth or ground truth label, and warped prediction $W_{t}$ from previous frame, respectively. 
 %
-${l(\cdot)}$ is the softmax loss of one pixel, and ${f(\cdot)}$ is the prediction of our basic segmentation network. 
+${l(\cdot)}$ is the softmax loss of one pixel, and ${f(\cdot)}$ is our basic segmentation network. 
 %
 By these two losses, we can constrain the accuracy and temporal consistency of the network prediction simultaneously.

@@ -31,7 +31,7 @@ Bayesian SegNet~\cite{Kendall2015} performs visual scene understanding with a me
 %
 To capture semantic correlations between neighboring patches and exploit patch-patch contextual information, Lin \emph{et al.}~\cite{Lin2016} formulated conditional random fields (CRFs) with CNN-based pairwise potential function. 
 %
-For generating fine prediction, a multi-path refinement network is proposed to effectively exploit multi-level features and refines the prediction step by step~\cite{Lin2017}.
+For generating fine prediction, a multi-path refinement network is proposed to effectively exploit multi-level features and refine the prediction step by step~\cite{Lin2017}.
 %
 
 \comments{
@@ -60,7 +60,7 @@ As the predictions from RefineNet \cite{Lin2017} shown in Fig.~\ref{fig:Consist}
 %
 With the popularity of affordable depth-cameras, many techniques have been proposed for semantic segmentation of RGBD images.
 %
-Gupta \emph{et al.} \cite{Gupta2014} extract features from RGB and depth data and integrate them for object detection and segmentation.
+Gupta \emph{et al.} \cite{Gupta2014} extracted features from RGB and depth data and integrated them for object detection and segmentation.
 %
 A novel long short-term memorized context fusion (LSTM-CF) model is proposed \cite{Li2016} to fuse contextual information from multiple sources such as RGB images and depth data.
 % 
@@ -76,9 +76,9 @@ While semantic segmentation, depth estimation, and other tasks for indoor scene 
 %
 Eigen and Fergus \cite{Eigen2015} address three different tasks including depth prediction, surface normal estimation, and semantic labeling using a single multi-scale convolutional network. 
 %
-Prediction-and-distillationn network (PAD-Net)\cite{Xu2018} predicts a set of intermediate tasks including depth, surface normal, semantic and contour estimation, and then uses the predictions from these tasks as multi-modal distillation modules' inputs for final tasks.  
+Prediction-and-distillationn network (PAD-Net)\cite{Xu2018} predicts a set of intermediate tasks including depth, surface normal, semantic and contour estimations, and then uses the predictions from these tasks as multi-modal distillation modules' inputs for final tasks.  
 %
-A novel joint Task-Recursive Learning (TRL) \cite{Zhang2018} framework for semantic segmentation and depth estimation was proposed by Zhang \emph{et al}. 
+A novel joint Task-Recursive Learning (TRL) \cite{Zhang2018} framework for semantic segmentation and depth estimation is proposed by Zhang \emph{et al}. 
 %
 In TRL, two tasks are alternately processed in the decoder to improve each other.
 % 
@@ -86,9 +86,9 @@ Jiao \emph{et al.} \cite{Jiao2018} present an attention-driven loss for network 
 %
 By combining two tasks as well as proposed attention-driven loss, the performance of two tasks are mutually improved.
 %
-Although the multi-task learning methods improve the segmentation results, it requires a lot of supplementary information or even dense-annotated data for other tasks.
+Although the multi-task learning methods improve the segmentation results, they require a lot of supplementary information or even dense-annotated data for other tasks.
 
-Above approaches provide a lot of novel ideas to improve the segmentation results. However, the performance of these methods are greatly suppressed by limited densely annotated training data.
+Above approaches provide a lot of novel ideas to improve the segmentation results. However, the performance of these methods is greatly suppressed by limited densely annotated training data.
 %
 It is expensive and time-consuming to manually annotate semantic labels for images. 
 %
@@ -99,9 +99,9 @@ Therefore, we propose to improve existing networks for semantic segmentation by 
 %
 First, instead of computing loss for each annotated image individually, we train a semantic segmentation network with a novel loss function to ensure the temporal consistency between adjacent frames in video sequences.
 %
-Second, with only a few labeled video frames, we propagate these labels to its neighboring frames with geometric transformations and generates a large number of new frames with pseudo ground truth (PGT) for network training. 
+Second, with only a few labeled video frames, we propagate these labels to its neighboring frames with geometric transformations and generate a large number of new frames with pseudo ground truth (PGT) for network training. 
 Compared to common data augmentation operations, it significantly increases the diversity of training data.
-With these two training strategies, our approach achieves  state-of-the-art performance on semantic segmentation for indoor scenes. 
+With these two training strategies, our approach achieves state-of-the-art performance on semantic segmentation for indoor scenes. 
 %
 \comments{
 The rest of this paper is organized as follows.
