@@ -3,19 +3,19 @@
 
 \begin{figure}[t]
 	\centering
-	\includegraphics[scale=0.61]{figure/PGT.png}
+	\includegraphics[scale=0.48]{figure/PGT.png}
 	%	\vspace*{-0.6cm} 
 	\caption{Propagated pseudo ground truth from a reference frame $F_t$ to $F_{t+1}$.\comments{The GT of $F_t$ is provided by NYU-v2 dataset. We propogate the annotated label of $F_{t}$ to $F_{t+1}$ and generate the corresponding PGT.} Most of the pseudo labels are reliable, while there are some noisy around object boundaries.}
 	\label{fig:PGT}
 	%	\vspace*{-0.35cm} 
 \end{figure}
 
-\begin{figure*}[!th]
+\begin{figure}[!th]
 	\centering
-	\includegraphics[scale=0.65]{figure/Result.png}
-	\caption{Qualitative results on the NYUD—v2 dataset. For the secne image in each row, we show: the RGB image; the ground truth of semantic segmentation; the result of RDFNet; the result of trained by $L_{Consistency}$; the result of trained by $L_{PGT}$ and the result of trained by two losses. Our method predicts more accurate segmentation results.}
+	\includegraphics[scale=0.42]{figure/Result.png}
+	\caption{Qualitative results on the NYUD—v2 dataset. For the secne image in each row, we show: the RGB image; the ground truth of semantic segmentation; the results of RDFNet; The results of our method. Our method predicts more accurate segmentation results.}
 	\label{fig:VisResult}
-\end{figure*}
+\end{figure}
 
 In order to evaluate the proposed method for indoor scene segmentation, we conduct experiments on a publicly available benchmark dataset (NYUD-v2) and show the superiority of our method.
 %, which contains 273 video sequences of RGBD data.  
