@@ -1,19 +1,12 @@
 \begin{abstract}
-Semantic segmentation is a fundamental task in indoor scene understanding.
-%
-Most previous supervised approaches focus on improving performance based on densely annotated image datasets. 
-%
-However, due to the limited amount of densely labeled images, the performance of existing segmentation networks is greatly limited.
-%
-In this paper, we exploit the temporal correlation in video frames to improve the performance of segmentation networks. 
-%there are often a large number of unlabeled data has not been used.
-Two effective strategies are proposed to propagate the information from sparsely labeled frames to adjacent video frames. 
-First, we augment training data for a supervised semantic segmentation network by generating pseudo ground-truth for neighboring frames from an labeled frame using filtered homography transformation. 
-%Hence, in this paper, we proposed two simple but effective methods to make better use of unlabeled data and improve segmentation results by using temporal correlation between unlabeled data.
-%
+Semantic segmentation is a fundamental task in indoor scene understanding. 
+Most previous supervised approaches rely on densely annotated image datasets. 
+Due to the limited amount of images with segmentation labels, the performance of existing networks is greatly limited.
+In this paper, we exploit temporal correlation in video frames to improve the performance of segmentation networks. 
+Two effective strategies are proposed to propagate the information from a few labeled frames to adjacent video frames. 
+First, we augment training data for supervised semantic segmentation networks by generating pseudo ground-truth for neighboring frames from a labeled frame using filtered homography transformation.
 Second, we introduce a loss function to ensure temporal consistency between the segmentation results of adjacent frames. 
-%
-Experiment results on NYU-V2 dataset show that our proposed method outperforms state-of-the-art techniques for semantic segmentation.
+Experiment results on NYU-Depth V2 dataset show that our proposed method outperforms state-of-the-art techniques for semantic segmentation.
 
 \end{abstract}
 \begin{keywords}
