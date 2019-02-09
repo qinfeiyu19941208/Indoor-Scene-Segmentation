@@ -1,18 +1,13 @@
 \section{Conclusion}
 \label{sec:conclusion}
-In this paper, we have introduced two relatively simple but very effiective approaches for indoor scene semantic segmentation.  
+In this paper, we introduce two effective approaches for exploiting unlabeled frames in videos to improve semantic segmentation of indoor scenes. 
+%In order to make full use of unlabeled samples, 
+First, we propagate the labeled data to neighboring frames and generate a large number of reliable pseudo labels to enrich the training set.
+%Despite the existence of noisy labels in PGT, the network can still learn more abundant information from PGT.
 %
-In order to make full use of unlabeled samples, we put forward a method of label propagating and generate the corresponding PGT.
+Second, our training policy takes advantage of temporal correlations between adjacent frames to enhance the semantic segmentation performance.
 %
-Despite the existence of noisy labels in PGT, the network can still learn more abundant information from PGT.
-%
-In addition, we also propose a training policy that training a semantic segmentation network using temporal consistecny to constrain the continuity between frames.
-%
-Experimental results on NYUD-v2 dataset shows that proposed method performs
-better than the baseline model. 
-%
-And the mean accuracy has been significantly improved.
-
+Experimental results on NYUD-v2 dataset demonstrate the superiority of our proposed method.  
 %{\bf Future Work.} As we said in the discussion, the imbalance of sample classes results in the error of segmentation results. 
 %
 %Hence, our future work is still based on the data itself.
