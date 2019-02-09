@@ -48,7 +48,9 @@ As the predictions from RefineNet \cite{Lin2017} shown in Fig.~\ref{fig:Consist}
 	\centering
 	\includegraphics[scale=0.57]{figure/Pipeline.png}
 %	\vspace*{-0.8cm} 
-	\caption{The diagram of our proposed methods. The left one is pseudo ground truth generation. We propagate the GT from labeled frame to their adjacent frames by image warpping. The right one is flow chart of training segmentation network using temporal consistncy. It mainly consists of three steps: 1) The current frame $F_t$ passes through a basic semantic segmentation network to generate the prediction  2) Warpping the prediction of previous frame $F_{t-1}$ depends on optical flow generated from PWC-Net \cite{Sun2018} 3) Warpped prediction of $F_{t-1}$ and generated PGT joint action on the network by $L_{consistency}$ and $L_{PGT}$ respectively.}
+	\caption{The diagram of our proposed method. Left: we propagate the ground truth from a labeled frame to its adjacent frames by image warping. Right: the flowchart of our training strategy using temporal consistency. 
+		%It mainly consists of three steps: 1) The current frame $F_t$ passes through a basic semantic segmentation network to generate the prediction  2) Warpping the prediction of previous frame $F_{t-1}$ depends on optical flow generated from PWC-Net \cite{Sun2018} 3) Warpped prediction of $F_{t-1}$ and generated PGT joint action on the network by $L_{consistency}$ and $L_{PGT}$ respectively.
+		}
 	\label{fig:Pipeline}
 	\vspace*{-0.2cm}
 \end{figure*}
@@ -64,45 +66,48 @@ A novel long short-term memorized context fusion (LSTM-CF) model is proposed \ci
 % 
 Cheng \emph{et al.} \cite{Cheng2017} rethink the relationship between RGB images and depth, and propose a locality-sensitive deconvolution network to refine object boundaries of segmentation result as well as a gated fusion layer to combine features of two modes.
 %
-Park \emph{et al.} \cite{Park2017} work on fusing the multi-level RGB-D CNN features.
-%
-They propose a multi-modal feature fusion blocks and added it to RefineNet \cite{Lin2017}.
+Park \emph{et al.} \cite{Park2017} propose a multi-modal feature fusion blocks for fusing the multi-level RGB-D features and integrate these blocks into RefineNet.
 
 
-\textbf{we do not solve the jumping problem.}
-
-{\bf Multi-task Learning.} 
+ 
+\noindent \textbf{Multi-task Learning.} 
 %
-Eigen and Fergus \cite{Eigen2015} address three different tasks such as depth prediction, surface normal estimation, and semantic labeling using a single multiscale convolutional netwrok. 
+While semantic segmentation, depth estimation, and other tasks for indoor scene understanding share features, especially at shallow layers, many techniques have been proposed to train networks for multiple tasks in order to complement each other.
 %
-Prediction-and-distillationn network (PAD-Net)\cite{Xu2018} predicts a set of intermediate tasks including depth, surface normal, semantic and contour estimation, and then using the predictions from these tasks as multi-modal disitillation modules' inputs for final tasks.  
+Eigen and Fergus \cite{Eigen2015} address three different tasks including depth prediction, surface normal estimation, and semantic labeling using a single multi-scale convolutional network. 
+%
+Prediction-and-distillationn network (PAD-Net)\cite{Xu2018} predicts a set of intermediate tasks including depth, surface normal, semantic and contour estimation, and then uses the predictions from these tasks as multi-modal distillation modules' inputs for final tasks.  
 %
 A novel joint Task-Recursive Learning (TRL) \cite{Zhang2018} framework for semantic segmentation and depth estimation was proposed by Zhang \emph{et al}. 
 %
-In TRL, two tasks are alternately processed in the decoder to imporve each other.
+In TRL, two tasks are alternately processed in the decoder to improve each other.
 % 
-Jiao \emph{et al.} \cite{Jiao2018} presented an attention-driven loss for network supervision and a synergy network to learn the information sharing strategies. 
+Jiao \emph{et al.} \cite{Jiao2018} present an attention-driven loss for network supervision and a synergy network to learn the information sharing strategies. 
 %
-By combining two tasks as well as proposed attention-driven loss, the performance of two tasks are mutuallty improved.
+By combining two tasks as well as proposed attention-driven loss, the performance of two tasks are mutually improved.
 %
-Although the multi-task learning methods improve the segmentation results, it needs a lot of supplementary information or even dense-annotated data from other tasks.
+Although the multi-task learning methods improve the segmentation results, it requires a lot of supplementary information or even dense-annotated data for other tasks.
 
-Above approaches provide a lot of novel ideas to improve the segmentation results, but the ability and performance of these methods are greatly limited by the limited dense-annotated training data.
+Above approaches provide a lot of novel ideas to improve the segmentation results. However, the performance of these methods are greatly suppressed by limited densely annotated training data.
 %
-Meanwhile, dense-annontated data is expensive to obtain.
+It is expensive and time-consuming to manually annotate semantic labels for images. 
 %
-In order to take full use of a large quantity of non-annotated data, in this paper, we propose two simple but effective approaches. 
+In contrast, it is economical to capture videos, and the temporal correlation between adjacent frames naturally provides more information and constraints for the semantic labels. 
 %
-One is propagating labels from annotated frame to neighbouring non-aonnotated frames that generates many good quality and mixed noise pseudo ground truth (PGT) for network training. 
+Therefore, we propose to improve existing networks for semantic segmentation by exploiting the temporal correlation between video frames in two aspects.
+%In order to take full use of a large quantity of non-annotated data, in this paper, we propose two simple but effective approaches. 
 %
-Compared to common data augmentation operations, it increases the diversity of training data.
+First, instead of computing loss for each annotated image individually, we train a semantic segmentation network with a novel loss function to ensure the temporal consistency between adjacent frames in video sequences.
 %
-The other is proposing a training policy that training a semantic segmentation network with a temporal consistency constraint between frames. 
+Second, with only a few labeled video frames, we propagate these labels to its neighboring frames with geometric transformations and generates a large number of new frames with pseudo ground truth (PGT) for network training. 
+Compared to common data augmentation operations, it significantly increases the diversity of training data.
+With these two training strategies, our approach achieves  state-of-the-art performance on semantic segmentation for indoor scenes. 
 %
+\comments{
 The rest of this paper is organized as follows.
 % 
 Our methodology will be introduced firstly.
 %
 Then, we will report the extensive experimental results as well as analyses. 
 %
-Finally we will draw a conclusion.
+Finally we will draw a conclusion.}

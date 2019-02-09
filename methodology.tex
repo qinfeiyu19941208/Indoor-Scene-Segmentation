@@ -1,127 +1,111 @@
 \section{Methodology}
 \label{sec:metho}
-In this section, we first describle the generation of PGT, and then present the overview of training segmentation network using temporal consistency.
 
-{\bf Pseudo Ground Truth Generation.}
-%
-Given the ground truth labeling ${G_t}$ of a frame ${F_t}$ in the training set, the semantic labels ${G_t}$ propogate to its adjacent frames via two steps.
-%
-First, the method of image transformation is applied to generate rough PGT by setting thresholds of homograph matrix ${H}$ as well as controlling propagation range ${P_r}$.
-%
-To ensure the quality of generated PGT, the thresholds of homograph matrix are set as follows while the ${P_r}$ is set to 10.
+Fig.~\ref{fig:Pipeline} shows the diagram of our proposed method. 
+In a set of video sequences of which only a few frames are manually labeled with pixel-wise semantic labels, we first propagate the labels from the labeled frames to their adjacent frames to generate pseudo ground truth. 
+Then we train a segmentation network with both the manually labeled frames and frames with pseudo labels, as well as a loss function to ensure the temporal consistency between adjacent frames.
 
+%\noindent\textbf{Pseudo Ground Truth Generation.}
+\subsection{Pseudo Ground Truth Generation}
+%
+In a video sequence of which one frame $F_t$ is manually annotated with pixel-wise semantic labels $G_t$, we propagate these labels to its adjacent $2K$ frames $\mathcal{F}=\{F_{t-K},\ldots, F_{t+K}\}$ via two steps.
+%
+First, for each frame $F_k$ in $\mathcal{F}$, a homography matrix $\mathbf{H}_{tk}$ is first computed by looking for matched SIFT keypoints with RANSAC verification.
+%
+In order to avoid large distortion or content changes, we only keep the video frames whose transformation matrix to the reference frame $F_t$
+% 
 \begin{equation}
 \centering
 \begin{aligned}
-H
+\mathbf{H}_{tk}
 =
 \left[
 \begin{array}{ccc}
 h_{00} & h_{01} & h_{02}\\
 h_{10} & h_{11} & h_{12}\\
-h_{20} & h_{21} & h_{22}\\
+h_{20} & h_{21} & 1\\
 \end{array}
 \right] \\
-0.95<\max{\left\{h_{00},h_{01},h_{10},h_{11}\right\}}&<1.05\\
-\max{\left\{h_{02},h_{12},h_{20},h_{21},h_{22}\right\}}&<15\\
+s.t. \hspace{0.4cm}0.95<\max{\left\{h_{00},h_{01},h_{10},h_{11}\right\}}&<1.05,\\
+\max{\left\{h_{02},h_{12},h_{20},h_{21}\right\}}&<15.\\
 \end{aligned}
 \end{equation}
 
-Second, filtering label manually once and deleting labels with excessive noise.
-%
-Comparing with dense image annotation, filttering PGT just took about half a day (2-3sec/image) for a human.
-%
-We believe that performance boost received at the cost of a small amount of manpower is valuable.
-%
-To this end, the total number of PGT frames obtained is 7626.
-%
-Although PGT includes noise samples, the diversity of training set are also enriched. 
 
-
-{\bf Training Segmentation Network using Temporal Consistency.}
+Fig.~\ref{fig:PGT} shows an example of the generated pseudo ground truth labels from a reference frame $F_t$. 
+It can be seen that most of the semantic labels are well propagated and can be used as extra data for network training. 
+% 
+However, there is still some noisy labels in the propagated PGT, especially at the object boundary regions. 
 %
-Fig.~\ref{fig:Pipeline} illustrates the overall of our proposed trainning policy, which mainly consists of three steps.
+Therefore, we add a manual filtering process to remove the frames where there are obvious visual artifacts in the generated pseudo labels.
 %
-First, the current frame is passed through the basic segmentation network to generate prediction.
-%
-Second, the warp operation is used to warp the previous frame prediction to align with current frame by optical flow.
-%
-Finally, the warped previous frame prediction plays a role of a supervisory item to constrain the consistency of prediction results of neighboring image frames.
-%
-Meanwhile, the PGT of current frame as the other supervisory item is introduced to guarantee that the prediction results are as accurate as possible.
 
 
 
-The basic segmentation network could employ any existing network structures. 
+%\noindent\textbf{Training Segmentation Network using Temporal Consistency.}
+\subsection{Training Segmentation Network using Temporal Consistency}
 %
-To obtain better segmentation result, we use RDFNet\cite{Park2017} that is a high-precision network for scene parsing as our basic segmentation netwrok. 
+As Fig.~\ref{fig:Pipeline} shows, we train a semantic segmentation networks using two adjacent frames in a video instead of using a single labeled frame.  
+% 
+First, two adjacent frames $F_{t-1}$ and $F_t$ is passed through a basic segmentation network to predict semantic labels $S_{t-1}$ and $S_{t}$.
 %
-The input of RDFNet is RGBD data. 
-%
-The depthmap is encoded into a 3D image called HHA \cite{Gupta2014} which encodes {\bf H}eight above ground and {\bf H}orizontal disparity in addition to the {\bf A}ngle with gravity for each pixel .
-%
-Four multi-model feature fusions (MMF) are used to fully exploit multi-level HHA and RGB images' features.
-%
-And then four RefineNet blocks are applied to refine the output of MMF gradually.
-%
-More details of RDFNet could be found in \cite{Park2017}. 
+The basic segmentation network could be any existing network for semantic segmentation. 
+We use RDFNet\cite{Park2017}, which is a high-precision network for semantic segmentation of a RGBD image.
+% The input of RDFNet is a RGBD image. 
+%The depthmap is encoded into a 3D image called HHA \cite{Gupta2014} which encodes {\bf H}eight above ground and {\bf H}orizontal disparity in addition to the {\bf A}ngle with gravity for each pixel .
+%Four multi-model feature fusions (MMF) are used to fully exploit multi-level HHA and RGB images' features.
+% And then four RefineNet blocks are applied to refine the output of MMF gradually.
+% More details of RDFNet could be found in \cite{Park2017}. 
 
-In our warp operation, the optical flow is calculated by PWC-Net \cite{Sun2018} that is a highly efficient and accurate model.
-%
-Please refer to \cite{Sun2018} for more details.
-%
-After getting optical flow, the score map of previous frame ${S_{t-1}}$ is warped to align with the current frame:
+
+
+Second, the predicted semantic score map $S_{t-1}$ for frame $F_{t-1}$ is warped to $\hat{S}_{t}$ according to the optical flow $O_{t-1,t}$ between $F_t$ and $F_{t-1}$, which is estimated using an efficient and accurate model PWC-Net~\cite{Sun2018} from two frames. 
+We implement a bilinear interpolation for $40$ dimensional score vector of each pixel in $S_{t-1}$, where 40 is the total number of object classes in the dataset. 
 \begin{equation}
 \centering
-\hat{S}_{t-1}=Warp(S_{t-1},O_t)
+\hat{S}_{t}=Warp(S_{t-1},O_{t-1,t}).
 \end{equation}
-where ${\hat{S}_{t-1}}$ denotes the warped score map of previous frame, and ${O_t}$ is the dense correspndence field. 
 %
-In our work, we implement ${Warp}$ as a bilinear interpolation of $S_{t-1}$.
-%
-And adding a Argmax layer to extract the warped prediction ${W_{t-1}}$ of previous frame.
+An argmax layer is then added on the warped score map ${\hat{S}_{t-1}}$ to generate the warped semantic prediction $W_{t}$.
+\comments{
 \begin{equation}
 \centering
-W_{t-1}=Argmax(\hat{S}_{t-1})
+W_{t}=\arg \max \hat{S}_{t-1}.
 \end{equation}
+}
 
-Two supervisory items act on the Network Together.
+
+Finally, the warped prediction acts as a supervisory item to constrain the consistency of prediction results between neighboring image frames.
 %
-One is to monitor the prediction result of the current frame to be consistent with the PGT.
-%
-The other is for constraining consistency of prediction results between frames by an additional loss function called consistentency loss. 
-%
-To leverage two supervisory items, we use a parameter ${\lambda}$ for weighing two losses. 
-%
-Our total loss function is defined as follows.
+Meanwhile, the PGT of current frame $F_t$ acts as another supervisory item to guarantee that the prediction results are as accurate as possible.
+Combining these two items, our loss function is defined as
 \begin{equation}
 \centering
 \begin{aligned}
-L_{All}= \lambda L_{PGT} +(1-\lambda)L_{Consistency}
+L_{seg}= \lambda L_{Consistency} +(1-\lambda)L_{PGT},
 \end{aligned}
 \end{equation}
-
-Here, ${L_{PGT}}$ and ${L_{Consistency}}$ denote the losses come from two supervision items.
 %
-Both ${L_{PGT}}$ and ${L_{Consistency}}$ are softmax loss, as described below.
+where, ${L_{PGT}}$ and ${L_{Consistency}}$ are cross-entropy loss, defined as
 \begin{equation}
 {
 \vspace*{-0.6cm} 
 \centering     
-\begin{aligned}
-L_{PGT} = -&\sum_{i=0}^Il(\vec p_i,\vec y_i) \\
-L_{Consistency} &= -\sum_{i=0}^Il(\vec w_i,\vec y_i)\\
-l(\vec p_i,\vec y_i) = -&\sum_{k=0}^c \,p_{ik}\log{y_{ik}}\;,\; \vec y_{i} = f(x_{i})\\
+\begin{aligned} 
+L_{Consistency} &= -\sum_{i=0} l(\mathbf{w}_i,\mathbf{y}_i),\\
+L_{PGT} = -&\sum_{i=0} l(\mathbf{p}_i,\mathbf{y}_i), \\
+l(\mathbf{p}_i,\mathbf{y}_i) = -&\sum_{k=0}^c \,\mathbf{p}_{ik}\log{\mathbf{y}_{ik}}\;,\; \mathbf{y}_{i} = f(x_{i}),\\
 \end{aligned}
 }
 \end{equation}
-
-Here ${x_i}$ and ${\vec y_i}$ are a pixel of input and the corresponding output of semantic segmentation model respectively. 
 %
-${c}$ represents number of categories, and ${I}$ is the number of pixels in the RGB image. 
+where ${x_i}$ and ${\mathbf{y}_i}$ are a pixel of an input frame and the corresponding predicted output of the semantic segmentation model respectively. 
 %
-${\vec p_i}$ and ${\vec w_i}$ are an one-hot vector for each pixel of PGT and warped previous frame prediction $W_{t-1}$ respectively. 
+$\mathbf{y}_i$ is a $c$ dimensional probability vector for each pixel.
+${c}=40$ is number of categories.
 %
-${l(\cdot)}$ is softmax loss of one pixel, and ${f(\cdot)}$ is our basic segmentation network. 
+${\mathbf{p}_i}$ and ${\mathbf{w}_i}$ are an one-hot vector for each pixel of the pseudo ground truth or ground truth label, and warped prediction $W_{t}$ from previous frame, respectively. 
 %
-By these two losses, we can constrain the accuracy and consistency of prediction result simultaneously.
+${l(\cdot)}$ is the softmax loss of one pixel, and ${f(\cdot)}$ is the prediction of our basic segmentation network. 
+%
+By these two losses, we can constrain the accuracy and temporal consistency of the network prediction simultaneously.
