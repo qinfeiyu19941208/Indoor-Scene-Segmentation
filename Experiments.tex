@@ -3,7 +3,7 @@
 
 \begin{figure}[t]
 	\centering
-	\includegraphics[width=\columnwidth]{figure/PGT.png}
+	\includegraphics[width=\columnwidth]{figure/PGT.pdf}
 	%	\vspace*{-0.6cm} 
 	\caption{Propagated pseudo ground truth from a reference frame $F_t$ to $F_{t+1}$.\comments{The GT of $F_t$ is provided by NYU-v2 dataset. We propogate the annotated label of $F_{t}$ to $F_{t+1}$ and generate the corresponding PGT.} Most of the pseudo labels are reliable, while there are some noisy around object boundaries.}
 	\label{fig:PGT}
@@ -12,7 +12,7 @@
 
 \begin{figure}[!th]
 	\centering
-	\includegraphics[width=\columnwidth]{figure/Result.png}
+	\includegraphics[width=\columnwidth]{figure/Result.pdf}
 	\caption{Qualitative results on the NYUD—v2 dataset. In each row, we show the input image, the ground truth of semantic segmentation, the result of RDFNet, and the result of our method, from left to right, respectively. Our method predicts more accurate segmentation results, especially at hhe highlighted regions.}
 	\label{fig:VisResult}
 \end{figure}
@@ -156,7 +156,7 @@ And our method achieves the comparable performance as multi-task learning method
 	\setlength{\abovecaptionskip}{-0.2cm}
 	\setlength{\belowcaptionskip}{-10cm}
 	\centering
-	\includegraphics[scale=0.4]{figure/Mislabels.png}
+	\includegraphics[scale=0.4]{figure/Mislabels.pdf}
 	\caption{Mislabeled images. (a) Two frames of the same scene. (b) Their corresponding ground truth labels. Note the difference between the labels of the floor pixels. Blue as ``floor mat" and green as ``floor".  The mislabled pixels are highlighted. (c)(d)(e) The prediction results of RefineNet, RDFNet and our method, respectively.}
 	\label{fig:mislabels}
 \end{figure}

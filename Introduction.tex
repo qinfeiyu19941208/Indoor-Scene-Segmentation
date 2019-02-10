@@ -46,7 +46,7 @@ As the predictions from RefineNet \cite{Lin2017} shown in Fig.~\ref{fig:Consist}
 	\setlength{\belowcaptionskip}{10pt}
 	\centering
 	\centering
-	\includegraphics[scale=0.56]{figure/Pipeline.png}
+	\includegraphics[scale=0.56]{figure/Pipeline.pdf}
 %	\vspace*{-0.8cm} 
 	\caption{The diagram of our proposed method. Left: we propagate the ground truth from a labeled frame to its adjacent frames by image warping. Right: the flowchart of our training strategy using temporal consistency. 
 		%It mainly consists of three steps: 1) The current frame $F_t$ passes through a basic semantic segmentation network to generate the prediction  2) Warpping the prediction of previous frame $F_{t-1}$ depends on optical flow generated from PWC-Net \cite{Sun2018} 3) Warpped prediction of $F_{t-1}$ and generated PGT joint action on the network by $L_{consistency}$ and $L_{PGT}$ respectively.
